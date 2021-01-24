@@ -22,11 +22,13 @@ public class Customer implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(length=50)
+	@Column(length=70, nullable=false)
 	private String firstName;
 	
+	@Column(length=70, nullable=false)
 	private String lastName;
 	
+	@Column(nullable=false, length=70, unique=true)
 	private String email;
 	
 	private Boolean enabled;
