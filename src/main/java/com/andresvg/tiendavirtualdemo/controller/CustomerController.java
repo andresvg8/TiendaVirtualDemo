@@ -6,6 +6,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,8 +46,8 @@ public class CustomerController {
 	
 	// Update a customer
 	@PutMapping("/{id}")
-	public ResponseEntity<?> update(@RequestBody Customer customerDetails, @PathVariable(value="id") Long userId){
-		Optional<Customer> oCustomer=cs.findById(userId);
+	public ResponseEntity<?> update(@RequestBody Customer customerDetails, @PathVariable(value="id") Long customerId){
+		Optional<Customer> oCustomer=cs.findById(customerId);
 		if( !oCustomer.isPresent() ) {
 			return ResponseEntity.notFound().build();
 		}
@@ -56,5 +57,15 @@ public class CustomerController {
 		oCustomer.get().setLastName(customerDetails.getLastName());*/
 		BeanUtils.copyProperties(customerDetails, oCustomer);
 		return ResponseEntity.status(HttpStatus.CREATED).body(cs.save(oCustomer.get()));
+	}
+	
+	// Delete a customer
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> delete(@PathVariable(value="id") Long customerId){
+		if( !cs.findById(customerId).isPresent() ) {
+			return ResponseEntity.notFound().build();
+		}
+		cs.deleteById(customerId);
+		return ResponseEntity.ok().build();
 	}
 }
